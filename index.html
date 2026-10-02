@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>エアコンクリーニング ご予約フォーム｜ピュアナ</title>
+<meta name="description" content="エアコンクリーニング ピュアナのWeb予約フォーム。台数とオプションを選ぶとその場で概算金額がわかります。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="shop" data-shop>エアコンクリーニング ピュアナ</div>
+    <h1>エアコンクリーニング<br>ご予約フォーム</h1>
+    <p>台数とオプションを選ぶと、その場で概算金額がわかります。送信後すぐに確認メールが届き、作業日は担当者からご連絡のうえ確定します。</p>
+    <div class="test-banner" id="testBanner" hidden>テストモード：送信先（GAS_URL）が未設定のため、送信しても予約は保存されません。</div>
+  </header>
+
+  <form id="bookingForm" novalidate>
+    <!-- 1. 台数とオプション -->
+    <section class="card" id="sec-price">
+      <h2><span class="step">1</span>台数とオプションを選ぶ</h2>
+
+      <div class="counter" data-key="units" data-min="1" data-max="20" data-value="1">
+        <div><span class="label">エアコン台数（壁掛け）</span><span class="price" data-base-label>1台目 8,000円／2台目以降 5,000円</span></div>
+        <div class="stepper"><button type="button" data-dec aria-label="減らす">−</button><output>1</output><button type="button" data-inc aria-label="増やす">＋</button></div>
+      </div>
+
+      <p class="sub">台数のうち、あてはまるもの</p>
+      <div class="counter" data-key="autoClean" data-sub>
+        <div><span class="label">お掃除機能付き</span><span class="price">＋5,000円/台</span></div>
+        <div class="stepper"><button type="button" data-dec aria-label="減らす">−</button><output>0</output><button type="button" data-inc aria-label="増やす">＋</button></div>
+      </div>
+      <div class="counter" data-key="tenkase" data-sub>
+        <div><span class="label">天カセ（業務用・天井埋め込み）</span><span class="price">＋14,400円/台</span></div>
+        <div class="stepper"><button type="button" data-dec aria-label="減らす">−</button><output>0</output><button type="button" data-inc aria-label="増やす">＋</button></div>
+      </div>
+      <div class="counter" data-key="highPlace" data-sub>
+        <div><span class="label">床からエアコン下まで2.3m以上</span><span class="price">＋3,000円/台（専用の脚立を使います）</span></div>
+        <div class="stepper"><button type="button" data-dec aria-label="減らす">−</button><output>0</output><button type="button" data-inc aria-label="増やす">＋</button></div>
+      </div>
+
+      <p class="sub">オプション（台数分までお選びください）</p>
+      <div class="counter" data-key="set" data-sub>
+        <div><span class="label">おまとめセット</span><span class="price">室外機清掃＋ナノソル除菌コート｜＋5,000円/台（別々より1,500円お得）</span></div>
+        <div class="stepper"><button type="button" data-dec aria-label="減らす">−</button><output>0</output><button type="button" data-inc aria-label="増やす">＋</button></div>
+      </div>
+      <div class="counter" data-key="nanosol" data-sub>
+        <div><span class="label">ナノソル除菌コート</span><span class="price">＋2,500円/台</span></div>
+        <div class="stepper"><button type="button" data-dec aria-label="減らす">−</button><output>0</output><button type="button" data-inc aria-label="増やす">＋</button></div>
+      </div>
+      <div class="counter" data-key="outdoor" data-sub>
+        <div><span class="label">室外機清掃</span><span class="price">＋4,000円/台</span></div>
+        <div class="stepper"><button type="button" data-dec aria-label="減らす">−</button><output>0</output><button type="button" data-inc aria-label="増やす">＋</button></div>
+      </div>
+      <div class="counter" data-key="drain" data-sub>
+        <div><span class="label">ドレンホース洗浄</span><span class="price">＋2,500円/台</span></div>
+        <div class="stepper"><button type="button" data-dec aria-label="減らす">−</button><output>0</output><button type="button" data-inc aria-label="増やす">＋</button></div>
+      </div>
+
+      <div class="estimate" id="estimate">
+        <div class="season" id="seasonLabel"></div>
+        <div>概算金額 <span class="total" id="totalAmount">¥8,000</span> <small>（税込・駐車場代別）</small></div>
+        <ul id="breakdown"></ul>
+        <p class="note">料金は第1希望日の月で決まります（4〜10月は繁忙期、11〜3月は閑散期）。対応地域なら出張費は無料です。汚れによる追加料金は基本的にありません（特殊な事情がある場合は作業前に必ずご説明します）。</p>
+      </div>
+    </section>
+
+    <!-- 2. お客様情報 -->
+    <section class="card">
+      <h2><span class="step">2</span>お客様情報</h2>
+      <div class="field"><label for="name">お名前<span class="req">必須</span></label><input type="text" id="name" name="name" autocomplete="name" required maxlength="60"></div>
+      <div class="row2">
+        <div class="field"><label for="tel">電話番号<span class="req">必須</span></label><input type="tel" id="tel" name="tel" autocomplete="tel" inputmode="tel" required placeholder="09012345678"></div>
+        <div class="field"><label for="email">メールアドレス<span class="req">必須</span></label><input type="email" id="email" name="email" autocomplete="email" required placeholder="確認メールの送り先"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="zip">郵便番号<span class="opt">任意</span></label><input type="text" id="zip" name="zip" autocomplete="postal-code" inputmode="numeric" maxlength="8" placeholder="123-4567"></div>
+        <div class="field"><label for="pref">都道府県<span class="req">必須</span></label><select id="pref" name="pref" required><option value="">選択してください</option></select></div>
+      </div>
+      <div class="field"><label for="address">ご住所<span class="req">必須</span></label><input type="text" id="address" name="address" autocomplete="street-address" required placeholder="市区町村・番地・建物名・部屋番号"></div>
+      <div class="field">
+        <span class="legend">お住まいのタイプ<span class="req">必須</span></span>
+        <div class="choices cols2" data-group="houseType">
+          <label class="choice"><input type="radio" name="houseType" value="戸建て" required>戸建て</label>
+          <label class="choice"><input type="radio" name="houseType" value="マンション・アパート">マンション・アパート</label>
+          <label class="choice"><input type="radio" name="houseType" value="店舗・事務所">店舗・事務所</label>
+          <label class="choice"><input type="radio" name="houseType" value="その他">その他</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. ご希望日時 -->
+    <section class="card">
+      <h2><span class="step">3</span>ご希望日時</h2>
+      <p class="hint">第3希望までご入力ください。ご希望日での対応が難しい場合は、1〜2日以内に日程再調整のご連絡をいたします。</p>
+      <div id="wishes"></div>
+    </section>
+
+    <!-- 4. お支払い・駐車場 -->
+    <section class="card">
+      <h2><span class="step">4</span>お支払い・駐車場</h2>
+      <div class="field">
+        <span class="legend">お支払い方法<span class="req">必須</span></span>
+        <div class="choices" data-group="payment">
+          <label class="choice"><input type="radio" name="payment" value="作業当日に現金" required>作業当日に現金</label>
+          <label class="choice"><input type="radio" name="payment" value="作業当日にPayPay">作業当日にPayPay</label>
+          <label class="choice"><input type="radio" name="payment" value="銀行振込（作業後）">銀行振込（作業後）</label>
+          <label class="choice"><input type="radio" name="payment" value="その他・相談したい">その他・相談したい</label>
+        </div>
+      </div>
+      <div class="field">
+        <span class="legend">駐車場<span class="req">必須</span></span>
+        <p class="hint">駐車場代は実費でお客様のご負担となります。</p>
+        <div class="choices" data-group="parking">
+          <label class="choice"><input type="radio" name="parking" value="敷地内に駐車できる" required>敷地内に駐車できる</label>
+          <label class="choice"><input type="radio" name="parking" value="近くのコインパーキングを利用">近くのコインパーキングを利用</label>
+          <label class="choice"><input type="radio" name="parking" value="わからない・相談したい">わからない・相談したい</label>
+        </div>
+      </div>
+      <div class="field">
+        <span class="legend">エアコン以外のお掃除も相談したい<span class="opt">任意</span></span>
+        <p class="hint">料金は担当者からご案内します。</p>
+        <div class="choices cols2">
+          <label class="choice"><input type="checkbox" name="otherCleaning" value="お風呂・浴室">お風呂・浴室</label>
+          <label class="choice"><input type="checkbox" name="otherCleaning" value="キッチン・レンジフード">キッチン・レンジフード</label>
+          <label class="choice"><input type="checkbox" name="otherCleaning" value="洗濯機">洗濯機</label>
+          <label class="choice"><input type="checkbox" name="otherCleaning" value="トイレ・洗面所">トイレ・洗面所</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. エアコンについて -->
+    <section class="card">
+      <h2><span class="step">5</span>エアコンについて</h2>
+      <p class="hint">わかる範囲でお答えください。当日の準備に役立てます。</p>
+      <div class="row2">
+        <div class="field"><label for="maker">メーカー<span class="opt">任意</span></label>
+          <select id="maker" name="maker"><option value="">選択してください</option><option>ダイキン</option><option>パナソニック</option><option>三菱電機</option><option>日立</option><option>東芝</option><option>富士通ゼネラル</option><option>シャープ</option><option>コロナ</option><option>アイリスオーヤマ</option><option>その他</option><option>わからない</option></select></div>
+        <div class="field"><label for="age">使用年数<span class="opt">任意</span></label>
+          <select id="age" name="age"><option value="">選択してください</option><option>3年未満</option><option>3〜5年</option><option>6〜10年</option><option>11年以上</option><option>わからない</option></select></div>
+      </div>
+      <div class="field"><label for="lastCleaning">前回のプロのクリーニング<span class="opt">任意</span></label>
+        <select id="lastCleaning" name="lastCleaning"><option value="">選択してください</option><option>1年以内</option><option>1〜2年前</option><option>3年以上前</option><option>一度もない</option><option>わからない</option></select></div>
+      <div class="field">
+        <span class="legend">気になること<span class="opt">任意・複数可</span></span>
+        <div class="choices cols2">
+          <label class="choice"><input type="checkbox" name="symptoms" value="ニオイ">ニオイ</label>
+          <label class="choice"><input type="checkbox" name="symptoms" value="カビ・黒い点">カビ・黒い点</label>
+          <label class="choice"><input type="checkbox" name="symptoms" value="効きが悪い">効きが悪い</label>
+          <label class="choice"><input type="checkbox" name="symptoms" value="水漏れ">水漏れ</label>
+          <label class="choice"><input type="checkbox" name="symptoms" value="音がうるさい">音がうるさい</label>
+          <label class="choice"><input type="checkbox" name="symptoms" value="電気代が気になる">電気代が気になる</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. その他 -->
+    <section class="card">
+      <h2><span class="step">6</span>その他</h2>
+      <div class="field"><label for="source">当店を知ったきっかけ<span class="req">必須</span></label>
+        <select id="source" name="source" required><option value="">選択してください</option><option>Google検索</option><option>Googleマップ</option><option>Instagram</option><option>くらしのマーケット</option><option>ジモティー</option><option>チラシ・ポスティング</option><option>家族・知人の紹介</option><option>以前利用した</option><option>その他</option></select></div>
+      <div class="field"><label for="referral">紹介コード<span class="opt">任意</span></label><input type="text" id="referral" name="referral" maxlength="30" placeholder="ご家族・お知り合いから紹介された方"></div>
+      <div class="field"><label for="note">ご要望・備考<span class="opt">任意</span></label><textarea id="note" name="note" maxlength="1000" placeholder="エアコンの設置場所、ご不在の時間帯など"></textarea></div>
+      <div class="hp" aria-hidden="true"><label>website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+      <div class="notice">
+        <strong>ご予約前にご確認ください</strong>
+        <ul>
+          <li>作業時間は1台あたり1.5〜2時間前後です。</li>
+          <li>室内機の上下左右に10cm以上のすき間が必要です。すき間がない場合は、できる範囲での作業となります。</li>
+          <li>次の機種は対応できません：富士通 ノクリア AS-Xシリーズ／三菱 霧ヶ峰アドバンス FZシリーズ／シャープ エアレストシリーズ・AY-Zシリーズ（AY-Z〜SDは対応可）／窓用エアコン／壁埋め込みエアコン／幅90cm以上の業務用壁掛けエアコン</li>
+          <li>土壁・漆喰・塗り壁・無垢材の壁や床は、水による汚れや傷みのおそれがあるため、作業をお断りする場合があります。</li>
+        </ul>
+      </div>
+      <div class="field">
+        <label class="choice"><input type="checkbox" id="agree" name="agree" required>上記を確認しました<span class="req">必須</span></label>
+      </div>
+      <div class="field">
+        <label class="choice"><input type="checkbox" id="newsletter" name="newsletter">お得なキャンペーンや次回クリーニングのご案内をメールで受け取る</label>
+      </div>
+
+      <button type="submit" class="submit" id="submitBtn">この内容で予約する</button>
+      <p class="error-box" id="errorBox" role="alert"></p>
+      <p class="hint">送信後、確認メールをお送りします。作業日はご予約から5営業日以内に担当者よりご連絡し確定します。ご入力いただいた情報は、ご予約の対応とサービス向上のためだけに使います。</p>
+    </section>
+  </form>
+
+  <section class="card done" id="doneView" hidden>
+    <div class="big">ご予約を受け付けました</div>
+    <p>予約番号 <span class="id" id="doneId"></span></p>
+    <p>ご入力のメールアドレスに確認メールをお送りしました。<br>5営業日以内に担当者よりご連絡し、作業日を確定いたします。</p>
+    <p class="hint">確認メールが届かない場合は、迷惑メールフォルダをご確認ください。</p>
+  </section>
+
+  <footer>
+    <div data-shop>エアコンクリーニング ピュアナ</div>
+    <div id="phoneLine" hidden>☎ <a id="phoneLink"></a></div>
+  </footer>
+</div>
+
+<div class="sticky" id="stickyBar">
+  <div class="inner">
+    <div><div class="small">概算金額（税込）</div><div class="amt" id="stickyAmount">¥8,000</div></div>
+    <a href="#bookingForm" id="stickyLink">予約へ進む</a>
+  </div>
+</div>
+
+<script src="assets/config.js"></script>
+<script src="assets/booking.js"></script>
+</body>
+</html>
